@@ -1,0 +1,17 @@
+            .store(in: &cancellables)
+    }
+    
+    func getCombinePublisher() -> AnyPublisher<String, URLError> {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .delay(for: 1, scheduler: DispatchQueue.main)
+            .timeout(3, scheduler: DispatchQueue.main)
+            .map { _ in
+                "newValue"
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func getEscapingClosure(completion: @escaping (_ value: String, _ error: URLError?) -> ()) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            completion("newValue2", nil)
+        }
